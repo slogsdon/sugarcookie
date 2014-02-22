@@ -7,6 +7,7 @@ package sugarcookie
 import (
 	"crypto/sha256"
 	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"strconv"
 	"strings"
@@ -21,7 +22,7 @@ func NewSignature(uniqueUserId string) string {
 	time := time.Now().Unix()
 
 	hash := sha256.Sum256([]byte(SECRET + strconv.FormatInt(time, 10) + uniqueUserId))
-	value := string(hash[:]) + "-" + strconv.FormatInt(time, 10) + "-" + uniqueUserId
+	value := hex.EncodeToString(hash[:]) + "-" + strconv.FormatInt(time, 10) + "-" + uniqueUserId
 	signature := base64.StdEncoding.EncodeToString([]byte(value))
 
 	return signature
@@ -36,7 +37,7 @@ func VerifySignature(signature string) bool {
 
 	values := strings.Split(string(unpack[:]), "-")
 	testHash := sha256.Sum256([]byte(SECRET + values[1] + values[2]))
-	if string(testHash[:]) == values[0] {
+	if hex.EncodeToString(testHash[:]) == values[0] {
 		return true
 	} else {
 		return false
