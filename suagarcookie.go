@@ -18,14 +18,18 @@ const (
 	SECRET = "change-this-secret-key"
 )
 
-func NewSignature(uniqueUserId string) string {
-	time := time.Now().Unix()
-
-	hash := sha256.Sum256([]byte(SECRET + strconv.FormatInt(time, 10) + uniqueUserId))
-	value := hex.EncodeToString(hash[:]) + "-" + strconv.FormatInt(time, 10) + "-" + uniqueUserId
+func newSignature(secret string, t int64, uniqueUserId string) string {
+	hash := sha256.Sum256([]byte(secret + strconv.FormatInt(t, 10) + uniqueUserId))
+	value := hex.EncodeToString(hash[:]) + "-" + strconv.FormatInt(t, 10) + "-" + uniqueUserId
+	fmt.Println( strconv.FormatInt(t, 10) )
 	signature := base64.StdEncoding.EncodeToString([]byte(value))
 
 	return signature
+}
+
+func NewSignature(uniqueUserId string) string {
+	t := time.Now().Unix()
+	return newSignature(SECRET, t, uniqueUserId)
 }
 
 func VerifySignature(signature string) bool {
