@@ -1,0 +1,15 @@
+= sugarcookie
+
+Generate and verify value signatures for secure cookies.
+
+Use sugarcookie to create secure hashes using a secret key, timestamp, and
+unique user ID. The hashes can then be used as the value of a cooked sent to
+the user it was generated for. When the user returns to the site you can verify
+the signed cookie is valid and trust that the user is who they claim to be.
+
+== Known Issues
+
+- This implimentation should be used over SSL only. As signatues are not
+  invalidated by date. Any old signature captured over an insecure link could
+  be used to spoof a user.
+
